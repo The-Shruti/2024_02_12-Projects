@@ -1,53 +1,59 @@
-//Create a new folder
+/**
+ * This script demonstrates file system operations such as creating folders, creating and modifying files, renaming files and folders,
+ * reading file content, and deleting files and folders.
+ */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs'); // Importing the Node.js file system module
+const path = require('path'); // Importing the Node.js path module
 
+/**
+ * Creates a new folder.
+ * @param {string} folderName - The name of the folder to be created.
+ */
 fs.mkdir('folder', (err) => {
   if (err) {
-    console.error(err);
+    console.error(err); // Log any errors
     return;
   }
   console.log('Folder created successfully');
 }); 
- 
 
-//Rename the Folder
-
-/*function renameFolder(oldFolderName, newFolderName) {
+/**
+ * Renames a folder.
+ * @param {string} oldFolderName - The current name of the folder.
+ * @param {string} newFolderName - The new name for the folder.
+ */
+function renameFolder(oldFolderName, newFolderName) {
     try {
-        fs.renameSync(oldFolderName, newFolderName);
+        fs.renameSync(oldFolderName, newFolderName); // Synchronously rename the folder
         console.log('Folder renamed successfully');
     } catch (err) {
         console.error('Error renaming folder:', err);
     }
 }
 
+// Example usage:
 const oldFolderName = './folder'; // Old folder name
 const newFolderName = './new_folder'; // New folder name
+renameFolder(oldFolderName, newFolderName);
 
-renameFolder(oldFolderName, newFolderName);*/
-
-
-//create a File
+/**
+ * Creates a new file with JSON data.
+ * @param {string} folderName - The relative path to the folder.
+ * @param {string} fileName - The name of the file to be created.
+ * @param {object} data - The JSON data to be written into the file.
+ */
 const folderName = './folder'; // Relative path to the folder
-const fileName = 'exa.txt'; // Name of the file  
-
-
-// Create the object
+const fileName = 'exa.txt'; // Name of the file
 const myObject = { 
     emp_id: 1,
     name: 'John',
     age: 30,
     city: 'Nagpur',
 };
-
-// Convert the object to a JSON string
 const jsonString = JSON.stringify(myObject);
+const filePath = path.join(folderName, fileName);
 
-const filePath = path.join(folderName, fileName); // Join folderName and fileName to create the full path
-
-// Write the JSON string to the text file
 fs.writeFile(filePath, jsonString, (err) => {
     if (err) {
         console.error('Error writing file:', err);
@@ -55,33 +61,40 @@ fs.writeFile(filePath, jsonString, (err) => {
     } 
     console.log('File Uploaded Successfully');
     console.log('Object written to file successfully');
-}); 
+});
 
-// Read the contents of the folder
+/**
+ * Reads the contents of a folder.
+ * @param {string} folderName - The name of the folder to be read.
+ */
 fs.readdir(folderName, (err, files) => {
     if (err) {
         console.error('Error reading folder:', err);
         return;
     }
 
-    // Log the filenames to the terminal        
     console.log('Files inside the folder:');
     files.forEach(file => {
         console.log(file);
     });
-}); 
+});
 
-// Read the contents of the file
+/**
+ * Reads the contents of a file.
+ * @param {string} filePath - The path to the file.
+ */
 fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
         console.error('Error reading file:', err);
         return;
     }
     console.log('File content:', data);
-}); 
+});
 
-//Read the specific Object 
-
+/**
+ * Updates the content of a file.
+ * @param {string} filePath - The path to the file.
+ */
 fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
         console.error('Error reading file:', err);
@@ -89,76 +102,32 @@ fs.readFile(filePath, 'utf8', (err, data) => {
     }
 
     try {
-        // Parse the JSON data
         const jsonData = JSON.parse(data);
-
-        if (typeof jsonData !== 'object' || Array.isArray(jsonData)) {
-            console.error('Data read from file is not in expected format (an object):', jsonData);
-            return;
-        }
-
-        // Function to display name and city by emp_id
-        function displayDetailsByEmpId(empId) {
-            // Check if emp_id matches
-            if (jsonData.emp_id === empId) {
-                console.log(`Name: ${jsonData.name}, City: ${jsonData.city}`);
-            } else {
-                console.log(`Employee with ID ${empId} not found.`);
-            }
-        }
-
-        // Example: Display name and city of object with emp_id '1'
-        const exampleEmpId = 1; // Assuming emp_id is a number
-        displayDetailsByEmpId(exampleEmpId);
-    } catch (error) {
-        console.error('Error parsing JSON:', error);
-    }
-});  
-
-
-// Update the line(.txt file) object
-fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-        console.error('Error reading file:', err);
-        return;
-    }
-
-    try {
-        // Parse the JSON data
-        const jsonData = JSON.parse(data);
-
-        // Update the name property from "John" to "Alice"
         jsonData.name = 'Alice';
-
-        // Convert the updated object back to JSON string
         const updatedJsonString = JSON.stringify(jsonData);
-
-        // Write the updated JSON string back to the file
         fs.writeFile(filePath, updatedJsonString, 'utf8', (err) => {
             if (err) {
                 console.error('Error writing file:', err);
                 return;
             }
             console.log('Name updated successfully');
-
-            // Display the updated object
             console.log('Updated Object:', jsonData);
         });
     } catch (error) {
         console.error('Error parsing JSON:', error);
     }
-});  
+});
 
-
-//Update the File 
-
+/**
+ * Renames a file.
+ * @param {string} oldFileName - The current name of the file.
+ * @param {string} newFileName - The new name for the file.
+ */
 const oldFileName = 'exa.txt'; // Old name of the file
 const newFileName = 'example.txt'; // New name of the file
+const oldFilePath = path.join(folderName, oldFileName);
+const newFilePath = path.join(folderName, newFileName);
 
-const oldFilePath = path.join(folderName, oldFileName); // Old file path
-const newFilePath = path.join(folderName, newFileName); // New file path
-
-// Rename the file
 fs.rename(oldFilePath, newFilePath, (err) => {
     if (err) {
         console.error('Error renaming file:', err);
@@ -167,46 +136,26 @@ fs.rename(oldFilePath, newFilePath, (err) => {
     console.log('File renamed successfully');
 });
 
-
-//Delete its content(Object)
+/**
+ * Deletes the content of a file.
+ * @param {string} filePath - The path to the file.
+ */
 fs.writeFile(filePath, '', 'utf8', (err) => {
     if (err) {
         console.error('Error deleting file content:', err);
         return;
     }
     console.log('Content of the file deleted successfully');
-});   
+});
 
-
-// Delete the file
-/*fs.unlink(filePath, (err) => {
-    if (err) {
-        console.error('Error deleting file:', err);
-        return;
-    }
-    console.log('File deleted successfully');
-});  */ 
-
-//Delete a folder 
-/*fs.rmdir(folderName, { recursive: true }, (err) => {
+/**
+ * Deletes a folder.
+ * @param {string} folderName - The name of the folder to be deleted.
+ */
+fs.rmdir(folderName, { recursive: true }, (err) => {
     if (err) {
         console.error('Error deleting folder:', err);
         return;
     }
     console.log('Folder deleted successfully');
-});*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
