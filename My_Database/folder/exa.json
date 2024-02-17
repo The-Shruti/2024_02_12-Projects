@@ -1,0 +1,14 @@
+[
+  {
+    "emp_id": 1,
+    "name": "Alice",
+    "age": 20,
+    "city": "Hyderabad"
+  },
+  {
+    "emp_id": 3,
+    "name": "soham",
+    "age": 22,
+    "city": "Pune"
+  }
+]
